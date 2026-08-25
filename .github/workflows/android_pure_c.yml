@@ -1,0 +1,49 @@
+name: Build Pure C Android APK & AAB
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-pure-c:
+    name: Build Native Android Packages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Android SDK & NDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant Gradle Permissions
+        run: chmod +x android/gradlew || true
+
+      - name: Build Pure C APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+
+      - name: Build Pure C AAB
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - name: Upload Output APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pure-c-app-release-apk
+          path: android/app/build/outputs/apk/release/*.apk
+
+      - name: Upload Output AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: pure-c-app-release-aab
+          path: android/app/build/outputs/bundle/release/*.aab
