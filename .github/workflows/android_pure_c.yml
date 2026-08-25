@@ -23,27 +23,35 @@ jobs:
       - name: Set up Android SDK & NDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant Gradle Permissions
-        run: chmod +x android/gradlew || true
+      - name: Setup Gradle Environment
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
 
-      - name: Build Pure C APK
-        run: |
-          cd android
-          ./gradlew assembleRelease
+      - name: Generate Wrapper Binary inside android/
+        working-directory: ./android
+        run: gradle wrapper
 
-      - name: Build Pure C AAB
-        run: |
-          cd android
-          ./gradlew bundleRelease
+      - name: Grant Executable Permissions
+        working-directory: ./android
+        run: chmod +x gradlew
+
+      - name: Build Pure C Release APK
+        working-directory: ./android
+        run: ./gradlew assembleRelease
+
+      - name: Build Pure C Release AAB
+        working-directory: ./android
+        run: ./gradlew bundleRelease
 
       - name: Upload Output APK
         uses: actions/upload-artifact@v4
         with:
-          name: pure-c-app-release-apk
+          name: pure-c-release-apk
           path: android/app/build/outputs/apk/release/*.apk
 
       - name: Upload Output AAB
         uses: actions/upload-artifact@v4
         with:
-          name: pure-c-app-release-aab
+          name: pure-c-release-aab
           path: android/app/build/outputs/bundle/release/*.aab
