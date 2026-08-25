@@ -1,4 +1,4 @@
-name: Build Pure C Android APK & AAB
+name: Build Pure C Android APK & AAB with Custom Logo
 
 on:
   push:
@@ -13,6 +13,26 @@ jobs:
     steps:
       - name: Checkout Code Repository
         uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
+      - name: Generate Android App Launcher Icons from omni_logo.png
+        run: |
+          LOGO_PATH="omni_logo.png"
+          RES_DIR="android/app/src/main/res"
+
+          mkdir -p $RES_DIR/mipmap-mdpi
+          mkdir -p $RES_DIR/mipmap-hdpi
+          mkdir -p $RES_DIR/mipmap-xhdpi
+          mkdir -p $RES_DIR/mipmap-xxhdpi
+          mkdir -p $RES_DIR/mipmap-xxxhdpi
+
+          convert $LOGO_PATH -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher.png
+          convert $LOGO_PATH -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher.png
+          convert $LOGO_PATH -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher.png
+          convert $LOGO_PATH -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher.png
+          convert $LOGO_PATH -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher.png
 
       - name: Set up Java JDK 17
         uses: actions/setup-java@v4
