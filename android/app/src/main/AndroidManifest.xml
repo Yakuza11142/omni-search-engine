@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.omni.engine">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- android:hasCode="false" allows pure C execution without Java classes -->
     <application
         android:label="Omni Engine"
         android:hasCode="false">
