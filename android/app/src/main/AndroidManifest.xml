@@ -3,6 +3,7 @@
 
     <application
         android:label="Omni Engine"
+        android:icon="@mipmap/ic_launcher"
         android:hasCode="false">
         
         <activity
