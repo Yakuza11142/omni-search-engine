@@ -46,7 +46,7 @@ int main() {
     event1.timestamp = (unsigned long long)time(NULL);
     event1.stream_id = 501;
     omni_strcpy(event1.source, "System Kernel Bus", MAX_FEED_NAME);
-    omni_strcpy(event1.payload, "Tesseract Engine v2.1 running @ 0.04ms average query latency.", MAX_EVENT_MSG);
+    omni_strcpy(event1.payload, "Omni Engine v.1 running @ 0.04ms average query latency.", MAX_EVENT_MSG);
     write(fd, &event1, sizeof(RealtimeEventNode));
 
     // Live Event Node 2: Live Network Telemetry
