@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.omnisys">
 
     <application
-        android:label="Omni Engine"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:hasCode="false">
-        
+        android:label="Omni Engine"
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+
+        <!-- Must point to MainActivity, NOT NativeActivity -->
         <activity
-            android:name="android.app.NativeActivity"
+            android:name=".MainActivity"
             android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="omni_engine" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 </manifest>
