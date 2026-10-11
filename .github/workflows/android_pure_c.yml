@@ -28,11 +28,15 @@ jobs:
           mkdir -p $RES_DIR/mipmap-xxhdpi
           mkdir -p $RES_DIR/mipmap-xxxhdpi
 
-          convert $LOGO_PATH -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher.png
-          convert $LOGO_PATH -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher.png
-          convert $LOGO_PATH -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher.png
-          convert $LOGO_PATH -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher.png
-          convert $LOGO_PATH -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher.png
+          if [ -f "$LOGO_PATH" ]; then
+            convert $LOGO_PATH -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher.png
+            convert $LOGO_PATH -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher.png
+            convert $LOGO_PATH -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher.png
+            convert $LOGO_PATH -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher.png
+            convert $LOGO_PATH -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher.png
+          else
+            echo "Warning: $LOGO_PATH not found, skipping icon generation."
+          fi
 
       - name: Set up Java JDK 17
         uses: actions/setup-java@v4
@@ -44,7 +48,34 @@ jobs:
         uses: android-actions/setup-android@v3
         with:
           accept-android-sdk-licenses: true
-          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
+          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools ndk;26.1.10909125'
+
+      - name: Cross-Compile Pure C Nodes with Android NDK
+        run: |
+          # Locate NDK Clang compiler for ARM64 (API level 34)
+          NDK_PATH=$(ls -d $ANDROID_HOME/ndk/* | head -n 1)
+          TOOLCHAIN="$NDK_PATH/toolchains/llvm/prebuilt/linux-x86_64"
+          CC="$TOOLCHAIN/bin/aarch64-linux-android34-clang"
+
+          echo "Using NDK Compiler: $CC"
+          
+          # Create jniLibs directory for native Android packaging
+          mkdir -p android/app/src/main/jniLibs/arm64-v8a
+
+          # Compile C source files into shared libraries (.so)
+          if [ -f "deterministic_memory_nexus_node.c" ]; then
+            $CC -O3 -shared -fPIC deterministic_memory_nexus_node.c -o android/app/src/main/jniLibs/arm64-v8a/libmemory_node.so
+            echo "Successfully compiled deterministic_memory_nexus_node.c"
+          fi
+
+          # Compile any other .c nodes present in the root directory
+          for c_file in *_node.c; do
+            if [ -f "$c_file" ] && [ "$c_file" != "deterministic_memory_nexus_node.c" ]; then
+              lib_name="lib$(basename "$c_file" .c).so"
+              $CC -O3 -shared -fPIC "$c_file" -o "android/app/src/main/jniLibs/arm64-v8a/$lib_name" -lm
+              echo "Successfully compiled $c_file -> $lib_name"
+            fi
+          done
 
       - name: Setup Gradle Environment
         uses: gradle/actions/setup-gradle@v3
