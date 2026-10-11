@@ -3,15 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="#000000">
+    android:background="#000000"
+    android:padding="24dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OMNI ENGINE - MEMORY NEXUS"
+        android:textColor="#00FF00"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:id="@+id/statusText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Initializing Pure C Engine..."
+        android:text="Connecting to C Memory Pool..."
         android:textColor="#00FF00"
-        android:textSize="18sp" />
+        android:textSize="14sp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:background="#111111"
+        android:padding="16dp" />
 
 </LinearLayout>
