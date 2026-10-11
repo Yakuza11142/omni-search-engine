@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <jni.h>
 
 #define MAX_POOL_BLOCKS 256
 #define BLOCK_SIZE_BYTES 1024
@@ -74,6 +75,30 @@ int nexus_free(MemoryNexusPool *pool, void *ptr) {
     return 0; // Pointer not found in pool
 }
 
+// ==========================================
+// Android JNI UI Bridge Hook
+// ==========================================
+JNIEXPORT jstring JNICALL
+Java_com_example_omnisys_MainActivity_getSystemStatus(JNIEnv *env, jobject thiz) {
+    MemoryNexusPool nexus;
+    init_memory_nexus(&nexus);
+
+    void *ptr1 = nexus_allocate(&nexus, 512);
+    char status_message[256];
+    
+    if (ptr1) {
+        snprintf(status_message, sizeof(status_message), 
+                 "Memory Nexus Active! Allocations: %d | Total Bytes: %zu", 
+                 nexus.active_allocations, nexus.total_allocated_bytes);
+        nexus_free(&nexus, ptr1);
+    } else {
+        snprintf(status_message, sizeof(status_message), "Memory Nexus Initialized (Idle)");
+    }
+
+    return (*env)->NewStringUTF(env, status_message);
+}
+
+// Standard entry point for standalone CLI execution/testing
 int main(int argc, char *argv[]) {
     printf("Initializing Deterministic Memory Nexus Node (Domain 1 - File 1)...\n");
 
