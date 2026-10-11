@@ -56,6 +56,28 @@ jobs:
         working-directory: ./android
         run: chmod +x gradlew
 
+      - name: Configure Debug Signing for Release Build
+        working-directory: ./android/app
+        run: |
+          cat << 'EOF' >> build.gradle
+
+          android {
+              signingConfigs {
+                  release {
+                      storeFile file('${System.getProperty("user.home")}/.android/debug.keystore')
+                      storePassword 'android'
+                      keyAlias 'androiddebugkey'
+                      keyPassword 'android'
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+          EOF
+
       - name: Build Pure C Release APK
         working-directory: ./android
         run: ./gradlew assembleRelease
