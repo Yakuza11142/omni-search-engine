@@ -76,24 +76,34 @@ int nexus_free(MemoryNexusPool *pool, void *ptr) {
 }
 
 // ==========================================
-// Android JNI UI Bridge Hook
+// Android JNI UI Bridge Hook (Feeds your C output to the UI)
 // ==========================================
 JNIEXPORT jstring JNICALL
 Java_com_example_omnisys_MainActivity_getSystemStatus(JNIEnv *env, jobject thiz) {
     MemoryNexusPool nexus;
     init_memory_nexus(&nexus);
 
+    // Run your deterministic allocation test
     void *ptr1 = nexus_allocate(&nexus, 512);
-    char status_message[256];
-    
-    if (ptr1) {
-        snprintf(status_message, sizeof(status_message), 
-                 "Memory Nexus Active! Allocations: %d | Total Bytes: %zu", 
-                 nexus.active_allocations, nexus.total_allocated_bytes);
-        nexus_free(&nexus, ptr1);
+    void *ptr2 = nexus_allocate(&nexus, 256);
+
+    char status_message[512];
+    if (ptr1 && ptr2) {
+        snprintf(status_message, sizeof(status_message),
+                 "Status: ONLINE\n\n"
+                 "Memory Pool Initialized successfully.\n"
+                 "Active Allocations: %d\n"
+                 "Total Allocated Bytes: %zu / %d bytes\n\n"
+                 "Deterministic blocks assigned & verified.",
+                 nexus.active_allocations,
+                 nexus.total_allocated_bytes,
+                 MAX_POOL_BLOCKS * BLOCK_SIZE_BYTES);
     } else {
-        snprintf(status_message, sizeof(status_message), "Memory Nexus Initialized (Idle)");
+        snprintf(status_message, sizeof(status_message), "Status: Pool Allocation Failed");
     }
+
+    nexus_free(&nexus, ptr1);
+    nexus_free(&nexus, ptr2);
 
     return (*env)->NewStringUTF(env, status_message);
 }
@@ -105,7 +115,6 @@ int main(int argc, char *argv[]) {
     MemoryNexusPool nexus;
     init_memory_nexus(&nexus);
 
-    // Perform deterministic allocations
     void *ptr1 = nexus_allocate(&nexus, 512);
     void *ptr2 = nexus_allocate(&nexus, 256);
 
@@ -115,7 +124,6 @@ int main(int argc, char *argv[]) {
                nexus.active_allocations, nexus.total_allocated_bytes);
     }
 
-    // Release allocations cleanly
     nexus_free(&nexus, ptr1);
     nexus_free(&nexus, ptr2);
 
