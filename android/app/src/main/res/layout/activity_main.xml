@@ -3,30 +3,64 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000"
-    android:padding="24dp"
-    android:gravity="center">
+    android:background="#0B0F19"
+    android:padding="20dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OMNI ENGINE - MEMORY NEXUS"
-        android:textColor="#00FF00"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:fontFamily="monospace"
-        android:layout_marginBottom="16dp" />
-
-    <TextView
-        android:id="@+id/statusText"
+    <!-- Header Panel -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Connecting to C Memory Pool..."
-        android:textColor="#00FF00"
-        android:textSize="14sp"
-        android:fontFamily="monospace"
-        android:gravity="center"
-        android:background="#111111"
-        android:padding="16dp" />
+        android:background="#1E293B"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OMNI SYSTEM ENGINE"
+            android:textColor="#38BDF8"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/systemStateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="● ALL SYSTEMS OPERATIONAL"
+            android:textColor="#22C55E"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="monospace" />
+    </LinearLayout>
+
+    <!-- Scrollable Engine Log Monitor -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#111827"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Querying C Backend Nodes..."
+            android:textColor="#34D399"
+            android:textSize="13sp"
+            android:fontFamily="monospace" />
+    </ScrollView>
+
+    <!-- Refresh Trigger Button -->
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sync Engine Modules"
+        android:backgroundTint="#3B82F6"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>
