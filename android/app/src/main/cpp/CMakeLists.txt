@@ -3,40 +3,17 @@ project("memory_node")
 
 find_library(log-lib log)
 
-# Get the absolute path of the repository root directory 
-# (going up 4 levels from android/app/src/main/cpp)
-get_filename_component(REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../" ABSOLUTE)
-
-# Explicitly gather the C files from the absolute root directory path
-file(GLOB SOURCE_FILES 
-    "${REPO_ROOT}/deterministic_memory_nexus_node.c"
-    "${REPO_ROOT}/omni_sys_node.c"
-    "${REPO_ROOT}/omnisys_*.c"
-    "${REPO_ROOT}/crypto_shield_node.c"
-    "${REPO_ROOT}/quantum_calc_engine.c"
-    "${REPO_ROOT}/spatial_routing_compiler.c"
-    "${REPO_ROOT}/storage_state_node.c"
-    "${REPO_ROOT}/swarm_consensus_node.c"
-    "${REPO_ROOT}/truth_validator_core.c"
-    "${REPO_ROOT}/vector_path_router.c"
-    "${REPO_ROOT}/media_frame_processor.c"
-    "${REPO_ROOT}/neural_tensor_node.c"
-    "${REPO_ROOT}/omni_nav_node.c"
-    "${REPO_ROOT}/omni_realtime_node.c"
-    "${REPO_ROOT}/omni_spatial_node.c"
-    "${REPO_ROOT}/omni_swarm_node.c"
-    "${REPO_ROOT}/omni_comm_node.c"
-    "${REPO_ROOT}/omni_compute_node.c"
-    "${REPO_ROOT}/omni_info_node.c"
-    "${REPO_ROOT}/omni_media_node.c"
-    "${REPO_ROOT}/holographic_ui_node.c"
-    "${REPO_ROOT}/matrix_transform_compiler.c"
-)
-
-# Fallback wildcard to grab any remaining .c files in the root if needed
-if(NOT SOURCE_FILES)
-    file(GLOB SOURCE_FILES "${REPO_ROOT}/*.c")
+# Use the absolute path passed from Gradle, falling back safely if needed
+if(NOT DEFINED PROJECT_ROOT_DIR)
+    get_filename_component(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../" ABSOLUTE)
 endif()
+
+# Automatically grab every single .c file from the repository root directory
+file(GLOB SOURCE_FILES "${PROJECT_ROOT_DIR}/*.c")
+
+# Debug check to confirm files are found during build configuration
+message(STATUS "Looking for C files in: ${PROJECT_ROOT_DIR}")
+message(STATUS "Found source files: ${SOURCE_FILES}")
 
 add_library(
     memory_node
