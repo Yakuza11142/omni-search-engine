@@ -3,18 +3,15 @@ project("memory_node")
 
 find_library(log-lib log)
 
-# Use the absolute path passed from Gradle, falling back safely if needed
-if(NOT DEFINED PROJECT_ROOT_DIR)
-    # Go up one extra level from android/ to reach the repository root where the .c files are
-    get_filename_component(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../" ABSOLUTE)
-endif()
+# Directly reference the deterministic memory node source file from the repository root
+# Since CMAKE_CURRENT_SOURCE_DIR is android/app/src/main/cpp, 
+# we go up 4 levels to reach the repository root where deterministic_memory_nexus_node.c is located.
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../deterministic_memory_nexus_node.c"
+)
 
-# Automatically grab every single .c file from the repository root directory
-file(GLOB SOURCE_FILES "${PROJECT_ROOT_DIR}/*.c")
-
-# Debug check to confirm files are found during build configuration
-message(STATUS "Looking for C files in: ${PROJECT_ROOT_DIR}")
-message(STATUS "Found source files: ${SOURCE_FILES}")
+# Debug check to confirm the file path resolves correctly during build configuration
+message(STATUS "Target source file: ${SOURCE_FILES}")
 
 add_library(
     memory_node
