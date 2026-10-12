@@ -108,7 +108,8 @@ Java_com_example_omnisys_MainActivity_getSystemStatus(JNIEnv *env, jobject thiz)
     return (*env)->NewStringUTF(env, status_message);
 }
 
-// Standard entry point for standalone CLI execution/testing
+#ifndef __ANDROID__
+// Standard entry point for standalone CLI execution/testing (skipped during Android builds)
 int main(int argc, char *argv[]) {
     printf("Initializing Deterministic Memory Nexus Node (Domain 1 - File 1)...\n");
 
@@ -131,3 +132,4 @@ int main(int argc, char *argv[]) {
     printf("Deterministic Memory Nexus Node executed successfully.\n");
     return 0;
 }
+#endif
