@@ -1,11 +1,17 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android' // (If using Kotlin)
+}
+
 android {
-    ...
+    namespace 'com.example.app'
+    compileSdk 34
+
     defaultConfig {
         ...
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                // Pass the project root directory path safely to CMake
                 arguments "-DPROJECT_ROOT_DIR=${rootDir.absolutePath}"
             }
         }
@@ -14,7 +20,7 @@ android {
     externalNativeBuild {
         cmake {
             path file("src/main/cpp/CMakeLists.txt")
-            version "3.22.1" // Or your installed NDK-supported version (e.g., 3.22.1+)
+            version "3.22.1"
         }
     }
 }
