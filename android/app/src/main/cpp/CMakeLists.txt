@@ -3,35 +3,39 @@ project("memory_node")
 
 find_library(log-lib log)
 
-# Explicitly point four levels up from android/app/src/main/cpp to the root directory
+# Get the absolute path of the repository root directory 
+# (going up 4 levels from android/app/src/main/cpp)
+get_filename_component(REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../" ABSOLUTE)
+
+# Explicitly gather the C files from the absolute root directory path
 file(GLOB SOURCE_FILES 
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../deterministic_memory_nexus_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_sys_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omnisys_*.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../crypto_shield_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../quantum_calc_engine.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../spatial_routing_compiler.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../storage_state_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../swarm_consensus_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../truth_validator_core.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../vector_path_router.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../media_frame_processor.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../neural_tensor_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_nav_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_realtime_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_spatial_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_swarm_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_comm_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_compute_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_info_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../omni_media_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../holographic_ui_node.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../../../matrix_transform_compiler.c"
+    "${REPO_ROOT}/deterministic_memory_nexus_node.c"
+    "${REPO_ROOT}/omni_sys_node.c"
+    "${REPO_ROOT}/omnisys_*.c"
+    "${REPO_ROOT}/crypto_shield_node.c"
+    "${REPO_ROOT}/quantum_calc_engine.c"
+    "${REPO_ROOT}/spatial_routing_compiler.c"
+    "${REPO_ROOT}/storage_state_node.c"
+    "${REPO_ROOT}/swarm_consensus_node.c"
+    "${REPO_ROOT}/truth_validator_core.c"
+    "${REPO_ROOT}/vector_path_router.c"
+    "${REPO_ROOT}/media_frame_processor.c"
+    "${REPO_ROOT}/neural_tensor_node.c"
+    "${REPO_ROOT}/omni_nav_node.c"
+    "${REPO_ROOT}/omni_realtime_node.c"
+    "${REPO_ROOT}/omni_spatial_node.c"
+    "${REPO_ROOT}/omni_swarm_node.c"
+    "${REPO_ROOT}/omni_comm_node.c"
+    "${REPO_ROOT}/omni_compute_node.c"
+    "${REPO_ROOT}/omni_info_node.c"
+    "${REPO_ROOT}/omni_media_node.c"
+    "${REPO_ROOT}/holographic_ui_node.c"
+    "${REPO_ROOT}/matrix_transform_compiler.c"
 )
 
-# Fallback wildcard glob if specific files need to be caught
+# Fallback wildcard to grab any remaining .c files in the root if needed
 if(NOT SOURCE_FILES)
-    file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../../../../*.c")
+    file(GLOB SOURCE_FILES "${REPO_ROOT}/*.c")
 endif()
 
 add_library(
