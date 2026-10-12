@@ -5,6 +5,7 @@ find_library(log-lib log)
 
 # Use the absolute path passed from Gradle, falling back safely if needed
 if(NOT DEFINED PROJECT_ROOT_DIR)
+    # Go up one extra level from android/ to reach the repository root where the .c files are
     get_filename_component(PROJECT_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../../" ABSOLUTE)
 endif()
 
