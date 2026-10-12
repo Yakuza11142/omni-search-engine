@@ -1,17 +1,18 @@
 package com.example.omnisys
 
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     init {
-        // Loads your compiled C shared library (.so)
+        // Loads the compiled C shared library containing all your root .c files
         System.loadLibrary("memory_node")
     }
 
-    // JNI hook linking directly to your C memory nexus function
+    // JNI hook mapping directly to your C multi-node aggregation function
     external fun getSystemStatus(): String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,13 +20,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val statusTextView = findViewById<TextView>(R.id.statusText)
+        val refreshButton = findViewById<Button>(R.id.refreshButton)
 
-        try {
-            // Calls your C code and displays the exact memory pool results on screen
-            val engineOutput = getSystemStatus()
-            statusTextView.text = engineOutput
-        } catch (e: UnsatisfiedLinkError) {
-            statusTextView.text = "Error: Could not link C library (${e.message})"
+        fun fetchEngineData() {
+            try {
+                // Pulls live data straight from your C backend nodes
+                val engineOutput = getSystemStatus()
+                statusTextView.text = engineOutput
+            } catch (e: UnsatisfiedLinkError) {
+                statusTextView.text = "Link Error: Could not connect to C core (${e.message})"
+            }
+        }
+
+        // Fetch data automatically on launch
+        fetchEngineData()
+
+        // Re-sync on button tap
+        refreshButton.setOnClickListener {
+            fetchEngineData()
         }
     }
 }
